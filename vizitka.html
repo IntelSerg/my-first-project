@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Сергей Чернов</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --card: #111111;
+      --border: rgba(255,255,255,0.07);
+      --accent1: #7c3aed;
+      --accent2: #06b6d4;
+      --accent3: #ec4899;
+      --text: #e2e8f0;
+      --muted: #64748b;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 20%, rgba(124,58,237,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 80% 80%, rgba(6,182,212,0.10) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 50% 50%, rgba(236,72,153,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      animation: bgPulse 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgPulse {
+      0%   { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    /* Floating particles */
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      animation: float linear infinite;
+    }
+
+    @keyframes float {
+      0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.6; }
+      100% { transform: translateY(-10vh) translateX(30px); opacity: 0; }
+    }
+
+    /* Card */
+    .card {
+      position: relative;
+      width: min(420px, 92vw);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 48px 40px 40px;
+      text-align: center;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04),
+        0 32px 80px rgba(0,0,0,0.8),
+        0 0 60px rgba(124,58,237,0.08);
+      animation: cardIn 0.7s cubic-bezier(0.22,1,0.36,1) both;
+      overflow: hidden;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(32px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Glowing top border */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent1), var(--accent2), transparent);
+      animation: borderGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes borderGlow {
+      0%   { width: 40%; opacity: 0.6; }
+      100% { width: 75%; opacity: 1; }
+    }
+
+    /* Avatar */
+    .avatar-wrap {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 28px;
+    }
+
+    .avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -1px;
+      position: relative;
+      z-index: 1;
+      user-select: none;
+    }
+
+    .avatar-ring {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--accent1), var(--accent2), var(--accent3), var(--accent1));
+      animation: spin 4s linear infinite;
+      z-index: 0;
+    }
+
+    .avatar-ring::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: var(--card);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Name */
+    .name {
+      font-size: clamp(26px, 6vw, 32px);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #fff 30%, var(--accent1) 60%, var(--accent2) 90%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 18px rgba(124,58,237,0.5));
+      animation: nameGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes nameGlow {
+      0%   { filter: drop-shadow(0 0 10px rgba(124,58,237,0.4)); }
+      100% { filter: drop-shadow(0 0 24px rgba(6,182,212,0.6)); }
+    }
+
+    /* Role */
+    .role {
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .role::before,
+    .role::after {
+      content: '—';
+      margin: 0 8px;
+      opacity: 0.4;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin-bottom: 28px;
+    }
+
+    /* Social icons */
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+      text-decoration: none;
+      transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .social-link::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--hover-bg, rgba(124,58,237,0.15));
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .social-link:hover {
+      transform: translateY(-4px) scale(1.08);
+      border-color: var(--hover-color, var(--accent1));
+      color: var(--hover-color, var(--accent1));
+      box-shadow: 0 8px 24px var(--hover-shadow, rgba(124,58,237,0.3));
+    }
+
+    .social-link:hover::before { opacity: 1; }
+
+    .social-link svg {
+      width: 22px;
+      height: 22px;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.25s;
+    }
+
+    .social-link:hover svg { transform: scale(1.1); }
+
+    /* Tooltip */
+    .social-link[data-tip]::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      background: rgba(20,20,20,0.95);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 11px;
+      white-space: nowrap;
+      padding: 4px 8px;
+      border-radius: 6px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s;
+    }
+
+    .social-link:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* CTA Button */
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(124,58,237,0.35);
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--accent2), var(--accent3));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .cta:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 8px 32px rgba(124,58,237,0.5);
+    }
+
+    .cta:hover::before { opacity: 1; }
+
+    .cta:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .cta span, .cta svg {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Pulse ring on button */
+    .cta-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .cta-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      opacity: 0.25;
+      animation: pulseCTA 2s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes pulseCTA {
+      0%, 100% { transform: scale(1); opacity: 0.2; }
+      50%       { transform: scale(1.04); opacity: 0.4; }
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 24px;
+      font-size: 11px;
+      color: rgba(100,116,139,0.5);
+      letter-spacing: 0.04em;
+    }
+
+    /* Responsive */
+    @media (max-width: 400px) {
+      .card { padding: 36px 24px 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Card -->
+  <div class="card">
+    <div class="avatar-wrap">
+      <div class="avatar-ring"></div>
+      <div class="avatar">СЧ</div>
+    </div>
+
+    <h1 class="name">Сергей Чернов</h1>
+    <p class="role">Администратор интернет-кафе</p>
+
+    <div class="divider"></div>
+
+    <div class="socials">
+
+      <!-- Telegram -->
+      <a class="social-link"
+         href="https://t.me/intelserg"
+         target="_blank"
+         rel="noopener"
+         data-tip="Telegram"
+         style="--hover-color:#2aabee; --hover-shadow:rgba(42,171,238,0.3); --hover-bg:rgba(42,171,238,0.1)">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+        </svg>
+      </a>
+
+      <!-- VK -->
+      <a class="social-link"
+         href="#"
+         data-tip="VKontakte"
+         style="--hover-color:#4680c2; --hover-shadow:rgba(70,128,194,0.3); --hover-bg:rgba(70,128,194,0.1)">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.391 0 15.684 0zm3.692 17.123h-1.744c-.66 0-.862-.525-2.049-1.714-1.033-1.01-1.49-1.135-1.744-1.135-.356 0-.458.102-.458.593v1.575c0 .424-.135.678-1.253.678-1.846 0-3.896-1.118-5.335-3.202C4.624 10.857 4.03 8.57 4.03 8.096c0-.254.102-.491.593-.491h1.744c.44 0 .61.203.78.677.864 2.49 2.303 4.675 2.896 4.675.22 0 .322-.102.322-.66V9.721c-.068-1.186-.695-1.287-.695-1.71 0-.203.17-.407.44-.407h2.743c.372 0 .508.203.508.643v3.473c0 .372.17.508.271.508.22 0 .407-.136.813-.542 1.254-1.406 2.151-3.574 2.151-3.574.119-.254.322-.491.762-.491h1.744c.525 0 .643.27.525.643-.22 1.017-2.354 4.031-2.354 4.031-.186.305-.254.44 0 .78.186.254.796.779 1.203 1.253.745.847 1.32 1.558 1.473 2.05.17.491-.085.745-.576.745z"/>
+        </svg>
+      </a>
+
+      <!-- GitHub -->
+      <a class="social-link"
+         href="#"
+         data-tip="GitHub"
+         style="--hover-color:#e2e8f0; --hover-shadow:rgba(226,232,240,0.2); --hover-bg:rgba(226,232,240,0.06)">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+        </svg>
+      </a>
+
+      <!-- Email -->
+      <a class="social-link"
+         href="mailto:example@mail.ru"
+         data-tip="Email"
+         style="--hover-color:#fb923c; --hover-shadow:rgba(251,146,60,0.3); --hover-bg:rgba(251,146,60,0.1)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="4" width="20" height="16" rx="3"/>
+          <polyline points="2,4 12,13 22,4"/>
+        </svg>
+      </a>
+
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-wrap">
+      <a class="cta" href="https://t.me/intelserg" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+        </svg>
+        <span>Написать мне</span>
+      </a>
+    </div>
+
+    <p class="footer">© 2026 Сергей Чернов</p>
+  </div>
+
+  <script>
+    // Generate floating particles
+    const container = document.getElementById('particles');
+    const count = 28;
+
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+
+      const x = Math.random() * 100;
+      const duration = 12 + Math.random() * 18;
+      const delay = -Math.random() * 20;
+      const size = 1 + Math.random() * 2;
+      const colors = ['rgba(124,58,237,0.7)', 'rgba(6,182,212,0.7)', 'rgba(236,72,153,0.5)', 'rgba(255,255,255,0.35)'];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+
+      p.style.cssText = `
+        left: ${x}%;
+        width: ${size}px;
+        height: ${size}px;
+        background: ${color};
+        animation-duration: ${duration}s;
+        animation-delay: ${delay}s;
+      `;
+
+      container.appendChild(p);
+    }
+
+    // Card tilt on mouse move (desktop only)
+    const card = document.querySelector('.card');
+
+    document.addEventListener('mousemove', (e) => {
+      if (window.innerWidth < 600) return;
+      const rect = card.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) / (window.innerWidth / 2);
+      const dy = (e.clientY - cy) / (window.innerHeight / 2);
+      const rotX = -dy * 5;
+      const rotY = dx * 5;
+      card.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    });
+
+    document.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg)';
+      card.style.transition = 'transform 0.5s ease';
+    });
+  </script>
+
+</body>
+</html>
